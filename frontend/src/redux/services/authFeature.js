@@ -65,6 +65,11 @@ const getAllUser = async () => {
   return response.data;
 };
 
+const updateUser = async (userData) => {
+  const response = await axios.put(AUTH_URL+"update", userData); // use .put and send data
+  return response.data;
+};
+
 const authService={
     register,
     login,
@@ -75,6 +80,7 @@ const authService={
     getUserIncome,
     getIncome,
     getAllUser,
+    updateUser,
 };
 
 export default authService;

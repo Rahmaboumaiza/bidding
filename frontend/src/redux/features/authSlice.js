@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import authService from '../services/authFeature';
 import {toast} from 'react-toastify';
-import Cookies from 'js-cookie'; 
+import Cookies from 'js-cookie';
+import axios from "axios"; 
 
 const initialState = {
     user:JSON.parse(localStorage.getItem("user"))||null,
@@ -110,6 +111,19 @@ export const getAllUser =createAsyncThunk("auth/getallusers",async(_,thunkAPI)=>
     return thunkAPI.rejectWithValue(errorMessage);
   }
 });
+
+export const updateUser = createAsyncThunk(
+  "auth/updateUser",
+  async (userData, thunkAPI) => {
+    try {
+      return await authService.updateUser(userData);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+
 
 
 const authSlice = createSlice({
@@ -306,7 +320,23 @@ const authSlice = createSlice({
         state.isError=true;
         state.message=action.payload;
         state.isLoggedIn=true;
-    });
+    })
+
+
+
+        .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      });
   },
 });
 

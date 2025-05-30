@@ -4,8 +4,9 @@ import { User2 } from "../../components/hero/Hero";
 import { commonClassNameOfInput, PrimaryButton } from "../../components/common/Design";
 import { useRedirectLoggedOutUser } from "../../hooks/useRedirectLoggedOutUser";
 import { useDispatch, useSelector } from "react-redux";
-import { getuserProfile,u } from "../../redux/features/authSlice";
+import { getuserProfile,updateUser } from "../../redux/features/authSlice";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const initialState ={
   name:"",
@@ -15,21 +16,43 @@ const initialState ={
 };
 
 export const UserProfile = () => {
-  const[formData,setFormData]=useState(initialState);
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+  });
 
-    const handleInputChange =(e)=>{
-    const {name,value}=e.target;
-    setFormData({...formData,[name]:value});
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getuserProfile());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || "",
+        email: user.email || "",
+      });
+    }
+  }, [user]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  useRedirectLoggedOutUser("/login");
-
-  const {user}= useSelector ((state)=>state.auth);
-  const dispatch=useDispatch();
-
-  useEffect(()=>{
-    dispatch(getuserProfile());
-  },[dispatch]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(updateUser(formData));
+      toast.success("Profile updated successfully!");
+      dispatch(getuserProfile());
+    } catch (error) {
+      toast.error(error.message || "Update failed");
+    }
+  };
 
   return (
     <>
@@ -43,32 +66,25 @@ export const UserProfile = () => {
             <Caption>{user?.email}</Caption>
           </div>
         </div>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="flex items-center gap-5 mt-10">
             <div className="w-full">
               <Caption className="mb-2">Full Name </Caption>
-              <input type="search" value ={user?.name}  onChange={handleInputChange}  className={`capitalize ${commonClassNameOfInput}`} placeholder="Sunil" readOnly />
+              <input name ="name" type="search"     value={formData.name}  onChange={handleInputChange}  className={`capitalize ${commonClassNameOfInput}`} placeholder="Sunil"  />
             </div>
           </div>
           <div className="flex items-center gap-5 mt-10">
-            <div className="w-1/2">
-              <Caption className="mb-2">Contact Number</Caption>
-              <input type="search" className={commonClassNameOfInput} placeholder="Contact Number" />
-            </div>
-            <div className="w-1/2">
+            <div className="w-full">
               <Caption className="mb-2">Email</Caption>
-              <input type="search" value ={user?.email} onChange={handleInputChange}  className={commonClassNameOfInput} placeholder="example@gmail.com" disabled />
+              <input  name="email" type="search"   value={formData.email} onChange={handleInputChange}  className={commonClassNameOfInput} placeholder="example@gmail.com" />
             </div>
           </div>
           <div className="my-8">
             <Caption className="mb-2">Role</Caption>
             <input type="search" value ={user?.role} onChange={handleInputChange}  className={commonClassNameOfInput} placeholder="admin" required />
           </div>
-          <div className="my-8">
-            <Caption className="mb-2">Profile Picture</Caption>
-            <input type="search" className={commonClassNameOfInput} placeholder="Working" required />
-          </div>
-          <PrimaryButton>Update Profile</PrimaryButton>
+          
+          <PrimaryButton  type="submit">Update Profile</PrimaryButton>  
         </form>
       </section>
     </>

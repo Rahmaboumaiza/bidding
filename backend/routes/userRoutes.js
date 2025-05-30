@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser,loginUser,loginStatus,logoutUser,loginAsSeller,getUser,getuserBalance,getAllUser,estimateIncome,addFavorite,removeFavorite,getFavorites,getTopSellers} = require('../controllers/userController');
+const { registerUser,loginUser,loginStatus,logoutUser,loginAsSeller,getUser,getuserBalance,getAllUser,estimateIncome,addFavorite,removeFavorite,getFavorites,getTopSellers,updateUser} = require('../controllers/userController');
 const { protect,isAdmin } = require('../middleware/authMiddleware');
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.get('/getuser',protect ,getUser);
 router.get('/sell-amount',protect ,getuserBalance);
 router.get('/estimate-income',protect,isAdmin,estimateIncome);
 router.get('/users',protect,isAdmin,getAllUser);//only access for admin users
-
+router.put("/update", protect, updateUser);
 
 // Favorites Routes (Corrected)
 router.post('/favorites/:productId', protect, addFavorite);    // POST /api/users/favorites/:productId
