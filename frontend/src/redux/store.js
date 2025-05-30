@@ -3,6 +3,7 @@ import authReducer from "./features/authSlice";
 import categoryReducer from "./features/categorySlice";
 import productReducer from "./features/productSlice";
 import bidReducer from "./features/biddingSlice";
+import favoritesReducer from "./features/favoritesSlice";
 
 export const store =configureStore({
     reducer:{
@@ -10,5 +11,6 @@ export const store =configureStore({
         category:categoryReducer,
         product:productReducer,
         bidding:bidReducer,
+        favorites: favoritesReducer,
     },
 })  

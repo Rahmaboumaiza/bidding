@@ -7,7 +7,7 @@ const cloudinary=require("cloudinary");
 
 
 const createProduct =asyncHandler(async (req,res)=>{
-    const {title,description,category,price,height,lengthPic,width,mediumused,weight}=req.body;
+    const {title,description,category,price,height,lengthPic,width,mediumused,weight,expirationDate,validityPeriod, }=req.body;
     const userId =req.user.id;
 
     const originalSlug =slugify(title,{
@@ -54,10 +54,16 @@ const createProduct =asyncHandler(async (req,res)=>{
         }
     }
 
+    // 👉 Fetch user role to check if admin
+  const user = await User.findById(userId);
+  const isVerify = user.role === "admin";
+
     const product= await Product.create({
         user :userId,
         title,
-        slug:slug,description,category,price,height,lengthPic,width,mediumused,weight,image:fileData,
+        slug:slug,description,category,price,height,lengthPic,width,mediumused,weight,image:fileData, validityPeriod,
+      expirationDate,
+      isExpired: false,isVerify,
     });
     res.status(201).json({
         success :true,
@@ -67,9 +73,25 @@ const createProduct =asyncHandler(async (req,res)=>{
 });
 
 
-const getAllProducts=asyncHandler(async (req,res)=>{
-    const products =await Product.find({}).sort("-createdAt").populate("user");
-    res.json(products);
+const getAllProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort("-createdAt").populate("user");
+
+  const productsWithDetails = await Promise.all(
+    products.map(async (product) => {
+      const latestBid = await BiddingProduct.findOne({ product: product._id }).sort("-createdAt");
+      const biddingPrice = latestBid ? latestBid.price : product.price;
+
+      const totalBids = await BiddingProduct.countDocuments({ product: product._id });
+
+      return {
+        ...product._doc,
+        biddingPrice,
+        totalBids, // Adding the total number of bids
+      };
+    })
+  );
+
+  res.status(200).json(productsWithDetails);
 });
 
 const getProduct = asyncHandler(async (req, res) => {
@@ -117,7 +139,7 @@ const deleteProduct=asyncHandler(async (req,res)=>{
 });
 
 const updateProduct=asyncHandler(async (req,res)=>{
-    const {title,description,category,price,height,lengthPic,width,mediumused,weight}=req.body;
+    const {title,description,category,price,height,lengthPic,width,mediumused,weight,isVerify}=req.body;
     const {id } =req.params;
     const product =await Product.findById(id);
 
@@ -178,7 +200,7 @@ const updateProduct=asyncHandler(async (req,res)=>{
     const updateProduct = await Product.findByIdAndUpdate({
         _id:id,},
         {
-        title,description,category,price,height,lengthPic,width,mediumused,weight,image:Object.keys(fileData).length ===0? Product?.image :fileData,
+        title,description,category,price,height,lengthPic,width,mediumused,weight,isVerify,image:Object.keys(fileData).length ===0? Product?.image :fileData,
     },{
         new:true,
         runValidators:true,
@@ -265,6 +287,47 @@ const getAllProductsByAmdin = asyncHandler(async (req, res) => {
   });
   
 
+  const updateVerify = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { isVerify } = req.body;
+
+ 
+
+  const product = await Product.findById(id);
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+
+  product.isVerify = isVerify;
+  const updatedProduct = await product.save();
+
+res.status(200).json({ data: updatedProduct, message: "Verification status updated" });
+
+});
+
+
+// Update isExpired to true
+const markProductAsExpired = asyncHandler(async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    if (!product.isExpired) {
+      product.isExpired = true;
+      await product.save();
+    }
+
+    res.status(200).json({ message: "Product marked as expired" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
 
 
 const test =asyncHandler(async (req,res)=>{
@@ -282,5 +345,8 @@ module.exports={
     getWonProducts,
     verifyAndCommissionProductByAdmin,
     getAllProductsByAmdin,
-    deleteProductsByAmdin
+    deleteProductsByAmdin,
+    updateVerify,
+    markProductAsExpired
+
 }

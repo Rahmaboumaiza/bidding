@@ -82,7 +82,7 @@ export const LoginAsSeller = () => {
             <input type="checkbox" />
             <Caption>I agree to the Terms & Policy</Caption>
           </div>
-          <PrimaryButton className="w-full rounded-none my-5 uppercase">Become Seller</PrimaryButton>
+          <PrimaryButton type="submit" className="w-full rounded-none my-5 uppercase">Become Seller</PrimaryButton>
           <div className="text-center border py-4 rounded-lg mt-4">
             <Title>OR SIGNIN WITH</Title>
             <div className="flex items-center justify-center gap-5 mt-5">

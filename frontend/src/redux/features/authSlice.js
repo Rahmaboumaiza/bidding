@@ -15,16 +15,19 @@ const initialState = {
 
 };
 
-export const register =createAsyncThunk("auth/register",async(userData,thunkAPI)=>{
-    try{
-        const response=await authService.register(userData);
-        localStorage.setItem("user",JSON.stringify(response));
-      return response;
+export const register = createAsyncThunk("auth/register", async (userData, thunkAPI) => {
+  try {
+    const response = await authService.register(userData);
+    localStorage.setItem("user", JSON.stringify(response));
+    return response;
   } catch (error) {
-    const errorMessage =(error.response && error.response.data &&error.response.message)||error.message||error.toString()||error;
+    const errorMessage = (error.response && error.response.data && error.response.message)
+      || error.message
+      || error.toString();
     return thunkAPI.rejectWithValue(errorMessage);
   }
 });
+
 
 export const login =createAsyncThunk("auth/login",async(userData,thunkAPI)=>{
     try{

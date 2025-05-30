@@ -56,8 +56,22 @@ const productSchema =mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref :"User",
     },
+     validityPeriod: {
+    type: Number, // in days
+    required: true,
+  },
+   expirationDate: {
+    type: Date,
+    required: true,
+  },
+ isExpired: {
+  type: Boolean,
+  default: false,
+},
 
-});
+},
+   {timestamps:true},
+);
 
 const Product = mongoose.model("Product", productSchema);
 module.exports =Product;

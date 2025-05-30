@@ -15,6 +15,9 @@ export const ProductList = () => {
     const dispatch=useDispatch();
   const {userproducts ,isLoading}=useSelector((state)=>state.product);
 
+  
+
+  
   useEffect(()=>{
     dispatch(getAllProductOfUser());
   },[dispatch]);
@@ -26,7 +29,7 @@ export const ProductList = () => {
 
    const handleSellProduct = async(productId)=>{
     await dispatch(sellproductsbyuser({productId:productId}))
-     await dispatch(getAllProductOfUser());
+    await dispatch(getAllProductOfUser());
   };
 
 

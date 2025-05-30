@@ -66,9 +66,21 @@ const Container = ({ children, className }) => {
 
 
 
-const PrimaryButton = ({ children, className }) => {
+
+const PrimaryButton = ({ 
+  children, 
+  className = "", 
+  onClick, // ← Add this
+  type = "button", // ← Default to "button" instead of "submit"
+  ...props // ← Capture all other props
+}) => {
   return (
-    <button type="submit" className={`${className} text-white bg-green font-medium rounded-full text-lg px-16 py-3 hover:bg-primary transition ease-in-out`}>
+    <button
+      type={type} // Now configurable
+      onClick={onClick} // Critical for your favorite button
+      className={`${className} text-white bg-green font-medium rounded-full text-lg px-16 py-3 hover:bg-primary transition ease-in-out`}
+      {...props} // Pass through any additional props
+    >
       {children}
     </button>
   );

@@ -16,6 +16,14 @@ const initialState ={
 };
 
 export const Register = () => {
+   const[userImage,setUserImage]=useState("");
+  const[imagePreview,setImagePreview]=useState(null);
+
+  const handleimagechange =(e)=>{
+    setUserImage(e.target.files[0]);
+    setImagePreview(URL.createObjectURL(e.target.files[0]));
+  };
+
 
   const dispatch =useDispatch();
   const navigate =useNavigate();
@@ -43,11 +51,13 @@ export const Register = () => {
       return toast.error("password does not match");
     }
 
-    const userData={
-      name,
-      email,
-      password
-    };
+   const userData = new FormData();
+userData.append("name", name);
+userData.append("email", email);
+userData.append("password", password);
+if (userImage) {
+  userData.append("photo", userImage);
+}
     dispatch (register(userData));
   };
 
@@ -115,11 +125,30 @@ export const Register = () => {
             <Caption className="mb-2 block">Confirm Password *</Caption>
             <input type="password" name="confirmPassword" value ={confirmPassword}  onChange={handleInputChange}className={commonClassNameOfInput} placeholder="Confirm password" />
           </div>
+          
+                    <div>
+                      <Caption className="mb-2">Image </Caption>
+              <input
+  type="file"
+  accept="image/*"
+  className={commonClassNameOfInput}
+  name="image"
+  onChange={handleimagechange}
+/>
+
+                      {imagePreview!==null?(
+                        <div>
+                          <img src={imagePreview} alt ="" className="mt-5 rounded-lg w-48 h-48 object-cover" />
+                          </div>
+                      ):(
+                        <p></p>
+                      )}
+                    </div>
           <div className="flex items-center gap-2 py-4">
             <input type="checkbox" />
             <Caption>I agree to the Terms & Policy</Caption>
           </div>
-          <PrimaryButton className="w-full rounded-none my-5">CREATE ACCOUNT</PrimaryButton>
+          <PrimaryButton type="submit" className="w-full rounded-none my-5">CREATE ACCOUNT</PrimaryButton>
           <div className="text-center border py-4 rounded-lg mt-4">
             <Title>OR SIGNUP WITH</Title>
             <div className="flex items-center justify-center gap-5 mt-5">

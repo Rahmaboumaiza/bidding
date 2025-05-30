@@ -1,11 +1,29 @@
 import PropTypes from "prop-types";
 import { RiAuctionFill } from "react-icons/ri";
 import { GiTakeMyMoney } from "react-icons/gi";
-import { MdOutlineFavorite } from "react-icons/md";
+import { MdOutlineFavorite ,MdFavorite} from "react-icons/md";
 import { Caption, PrimaryButton, ProfileCard, Title } from "../common/Design";
 import { NavLink } from "react-router-dom";
+import { removeFavorite,addFavorite } from "../../redux/features/favoritesSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-export const ProductCard = ({ item }) => {
+export const ProductCard = ({ item}) => {
+   const dispatch = useDispatch();
+   const favorites = useSelector((state) => state.favorites.items || []); // Fallback to empty array
+   const isFavorite = favorites.some((fav) => fav._id === item._id); 
+   
+  console.log("item",item);
+ const handleToggleFavorite = (e) => {
+  if (isFavorite) {
+    console.log('Dispatching removeFavorite');
+    dispatch(removeFavorite(item._id));
+  } else {
+    console.log('Dispatching addFavorite');
+    dispatch(addFavorite(item._id));
+  }
+};
+
+  
   return (
     <>
       <div className="bg-white shadow-s1 rounded-xl p-3">
@@ -29,7 +47,7 @@ export const ProductCard = ({ item }) => {
           </div>
         </div>
         <div className="details mt-4">
-          <Title className="uppercase">{item.title.slice(0,20)}</Title>
+          <Title className="uppercase">{item?.title}</Title>
           <hr className="mt-3" />
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center justify-between gap-5">
@@ -55,10 +73,18 @@ export const ProductCard = ({ item }) => {
           <hr className="mb-3" />
 
           <div className="flex items-center  justify-between mt-3">
+                <NavLink to={`/details/${item?._id}`}> 
             <PrimaryButton className="rounded-lg text-sm">Place Bid</PrimaryButton>
-            <PrimaryButton className="rounded-lg px-4 py-3">
-              <MdOutlineFavorite size={20} />
-            </PrimaryButton>
+            </NavLink>
+        <PrimaryButton 
+          onClick={() => handleToggleFavorite(item?._id)}
+          className="rounded-lg px-4 py-3">
+            {isFavorite ? (
+              <MdFavorite size={20} className="text-red-500" /> // Changed to MdFavorite
+            ) : (
+              <MdOutlineFavorite size={20} className="text-gray-500" />
+            )}
+          </PrimaryButton>
           </div>
         </div>
       </div>

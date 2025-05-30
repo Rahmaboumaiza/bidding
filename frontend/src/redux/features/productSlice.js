@@ -89,6 +89,34 @@ export const updateProductByAdmin =createAsyncThunk("product/admin/update",async
 });
 
 
+export const updateVerify = createAsyncThunk(
+  "product/admin/updateVerify",
+  async ({ id, formData }, thunkAPI) => {
+    try {
+      return await productService.updateVerify(id, formData);
+    } catch (error) {
+      const errorMessage =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        "Something went wrong";
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+
+export const expireProduct = createAsyncThunk(
+  'products/expireProduct',
+  async (productId, thunkAPI) => {
+    try {
+      return await productService.expireProduct(productId);
+    } catch (error) {
+    const errorMessage =(error.response && error.response.data &&error.response.data.message)||error.message||error.toString()||error;
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+  }
+);
+
 
 const productSlice=createSlice({
     name:"product",
@@ -236,7 +264,54 @@ const productSlice=createSlice({
                 state.isError=true;
                 state.message=action.payload;
                 toast.error(action.payload);
+            })
+            
+
+             .addCase(updateVerify.pending,(state)=>{
+                state.isLoading=true
+            })
+            .addCase(updateVerify.fulfilled,(state,action)=>{
+                state.isLoading=false;
+                state.isSuccess=true; 
+                state.isError=false;
+                state.message = action.payload?.message || "Verification updated successfully";
+
+                  // Optional: update the specific product in the state if you want instant UI update
+                const updatedProduct = action.payload?.data;
+                if (updatedProduct) {
+                  state.products = state.products.map((product) =>
+                 product._id === updatedProduct._id ? updatedProduct : product
+               );
+              }
+               // toast.success("Verification updated successfully");
+        
+            })
+            .addCase(updateVerify.rejected,(state,action)=>{
+                state.isLoading=false;
+                state.isError=true;
+                state.message=action.payload;
+                toast.error(action.payload);
+            })
+
+            .addCase(expireProduct.pending, (state) => {
+                 state.isLoading=true
+              })
+            .addCase(expireProduct.fulfilled, (state, action) => {
+                state.isLoading = false;
+
+               // Update the expired flag in the product
+               const index = state.products.findIndex(
+               (product) => product._id === action.payload
+               );
+               if (index !== -1) {
+                state.products[index].isExpired = true;
+                }
+               })
+            .addCase(expireProduct.rejected, (state, action) => {
+                state.isLoading= false;
+                 state.isError= action.payload;
             });
+  
     },
 });
 

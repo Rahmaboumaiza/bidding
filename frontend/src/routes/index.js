@@ -1,4 +1,5 @@
 // export { ProductCard } from "../components/cards/ProductCard";
+import Favorites from './../screen/product/Favorites';
 // export { CategoryCards } from "../components/cards/CategoryCards";
 
 export { UserProfile } from "../screen/auth/UserProfile";
@@ -34,3 +35,5 @@ export { CreateCategory } from "../admin/category/CreateCategory";
 export { UpdateCategory } from "../admin/category/UpdateCategory";
 export { Catgeorylist } from "../admin/category/Catgeorylist";
 
+export {Favorites } from "../screen/product/Favorites";
+export{ Contact } from '../components/contact';

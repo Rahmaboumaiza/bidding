@@ -28,6 +28,9 @@ export const AddProduct = () => {
   const[productImage,setProductImage]=useState("");
   const[imagePreview,setImagePreview]=useState(null);
 
+const [validityPeriod, setValidityPeriod] = useState(24); // default 24 hours
+
+
   const {title,description,price,height,lengthpic,width,mediumused,weigth,category} =product;
   const {isSuccess}=useSelector((state)=>state.product);
 
@@ -44,6 +47,7 @@ export const AddProduct = () => {
 
   const handleSubmit=async(e)=>{
       e.preventDefault();
+
   
       const formData =new FormData();
       formData.append("title",title);
@@ -55,12 +59,19 @@ export const AddProduct = () => {
       formData.append("weigth",weigth);
       formData.append("description",description);
       formData.append("image",productImage);
+      formData.append("validityPeriod", validityPeriod);
+  const expirationDate = new Date();
+expirationDate.setDate(expirationDate.getDate() + validityPeriod);
+
+formData.append("expirationDate", expirationDate.toISOString());
+
+
 
       if (category){
         formData.append("category",category.label);
       }
 
-      await dispatch(createProduct(formData));
+     await dispatch(createProduct(formData));
       if (isSuccess){
         navigate("/product");
       }
@@ -125,6 +136,22 @@ export const AddProduct = () => {
             <Caption className="mb-2">Description *</Caption>
             <textarea name="description" value={product?.description} onChange={handleInputChange} className={`${commonClassNameOfInput}`} cols="30" rows="5"></textarea>
           </div>
+      <div className="mb-4">
+  <label htmlFor="validityPeriod" className="block text-sm font-medium text-gray-700 mb-1">
+    Validity Period (in days)
+  </label>
+  <input
+    type="number"
+    id="validityPeriod"
+    value={validityPeriod}
+    onChange={(e) => setValidityPeriod(Number(e.target.value))}
+    min={1}
+    className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-500"
+    placeholder="Enter number of days"
+  />
+</div>
+
+
           <div>
             <Caption className="mb-2">Image </Caption>
             <input type="file" className={`${commonClassNameOfInput}`} name="image" onChange={(e)=>handleimagechange(e)}/>

@@ -23,7 +23,7 @@ export const Home =()=>{
        < TopSeller/>
        < Process/>
        < Trust/>
-       < TopCollection/>
+       {/* < TopCollection/> */}
     </>
     );
 };

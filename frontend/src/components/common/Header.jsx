@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-
-// design
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { IoSearchOutline } from "react-icons/io5";
 import { Container, CustomNavLink, CustomNavLinkList, ProfileCard } from "./Design";
@@ -66,7 +64,7 @@ export const Header = () => {
                 {isHomePage && !isScrolled ? (
                   <img src="../images/comman/header-logo.png" alt="LogoImg" className="h-11" />
                 ) : (
-                  <img src="../images/comman/header-logo1.png" alt="LogoImg" className="h-11" />
+                  <img src="../images/comman/header-logo.png" alt="LogoImg" className="h-11" />
                 )}
               </div>
               <div className="hidden lg:flex items-center justify-between gap-8">

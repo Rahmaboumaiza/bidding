@@ -2,10 +2,34 @@ import { TiEyeOutline } from "react-icons/ti";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { NavLink } from "react-router-dom";
-
+import {updateVerify} from "../redux/features/productSlice";
+import { useDispatch} from "react-redux";
+import { useEffect} from "react";
+import { useParams } from "react-router-dom";
+import {toast} from 'react-toastify';
 
 
  export const Table = ({ products, handleSellProduct, handleDeleteProduct, isAdmin, isWon }) => {
+   const dispatch = useDispatch();
+
+
+
+  const handleVerifyToggle = async (product) => {
+    try {
+      const newVerifyStatus = !product.isVerify;
+      await dispatch(updateVerify({ 
+        id: product._id, 
+        formData: { isVerify: newVerifyStatus }
+      })).unwrap();
+      toast.success(`Product ${newVerifyStatus ? 'verified' : 'unverified'}`);
+    } catch (error) {
+      toast.error('Failed to update verification status');
+    }
+  };
+
+
+
+
   console.log("products:", products);
   return (
     <>
@@ -66,18 +90,19 @@ import { NavLink } from "react-router-dom";
                 </td>
                 {!isWon && (
                   <>
-                    <td className="px-6 py-4">
-                     
-                      {product?.isVerify ? (
-                        <div className="flex items-center">
-                          <div className="h-2.5 w-2.5 rounded-full bg-green me-2"></div> Yes
-                        </div>
-                      ) : (
-                        <div className="flex items-center">
-                          <div className="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div> No
-                        </div>
-                      )}
-                    </td>
+                   <td className="py-3 px-6">
+  <button
+    disabled={!isAdmin}
+    className={`py-1 px-3 rounded-lg ${
+      product?.isVerify
+        ? "bg-green text-white"
+        : "bg-gray-400 text-gray-700 hover:bg-gray-500"
+    } ${!isAdmin ? "opacity-50 cursor-not-allowed" : ""}`}
+    onClick={() => isAdmin && handleVerifyToggle(product)}
+  >
+    {product?.isVerify ? "Verified" : "Verify"}
+  </button>
+</td>
                     {!isAdmin && (
                       <td className="py-3 px-6">
                         {product?.isSoldout ? (

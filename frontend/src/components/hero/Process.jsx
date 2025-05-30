@@ -11,14 +11,14 @@ export const Process = () => {
 
           <div className="content grid grid-cols-1 md:grid-cols-4 gap-8 mt-8">
             {processList.map((item, index) => (
-              <div key={index} className="p-8 bg-[rgba(38,90,77,0.62)] rounded-xl flex items-center justify-center flex-col text-center">
+              <div key={index} className="p-8 bg-white rounded-xl flex items-center justify-center flex-col text-center">
                 <div className="w-16 h-16">
                   <img src={item.cover} alt="" />
                 </div>
                 <Title level={5} className="my-3 font-normal text-white">
                   {item.title}
                 </Title>
-                <p className="text-gray-300">{item.desc}</p>
+                <p className="text-black">{item.desc}</p>
               </div>
             ))}
           </div>

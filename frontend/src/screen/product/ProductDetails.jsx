@@ -2,16 +2,86 @@ import { Body, Caption, Container, Title } from "../../components/common/Design"
 import { IoIosStar, IoIosStarHalf, IoIosStarOutline } from "react-icons/io";
 import { commonClassNameOfInput } from "../../components/common/Design";
 import { AiOutlinePlus } from "react-icons/ai";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRedirectLoggedOutUser } from './../../hooks/useRedirectLoggedOutUser';
 import { useDispatch, useSelector } from "react-redux";
-import {getProduct} from "../../redux/features/productSlice";
-import { useEffect} from "react";
+import {getProduct,expireProduct} from "../../redux/features/productSlice";
 import { useParams } from "react-router-dom";
 import { DateFormatter } from "../../utils/DateFormatter";
 import { fetchBiddingHistory, placebid } from "../../redux/features/biddingSlice";
 import { toast } from "react-toastify";
 import {Loader} from"../../components/common/Loader"
+
+
+const CountdownTimer = ({ createdAt, product }) => {
+    console.log("CountdownTimer props:", { createdAt, product });
+  const dispatch = useDispatch();
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [createdAt, product?.validityPeriod]); // Add validityPeriod to dependencies
+
+  useEffect(() => {
+      console.log("timeLeft changed:", timeLeft);
+      console.log("product in effect:", product);
+    if (!product || !product._id) return;
+
+    if (!timeLeft) {
+      console.log("✅ Dispatching expireProduct for:", product._id);
+      dispatch(expireProduct(product._id));
+    }
+  }, [timeLeft, dispatch, product]);
+
+  function calculateTimeLeft() {
+    if (!product?.validityPeriod || !createdAt) return null;
+    
+    const createdDate = new Date(createdAt);
+    // Use product.validityPeriod instead of fixed 30 days
+    const expiryDate = new Date(createdDate.getTime() + product.validityPeriod * 24 * 60 * 60 * 1000);
+    const now = new Date();
+    const diff = expiryDate - now;
+
+    if (diff <= 0) return null;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / 1000 / 60) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    return { days, hours, minutes, seconds };
+  }
+
+  if (!timeLeft) {
+    return <span>Product expired</span>;
+  }
+  const { days, hours, minutes, seconds } = timeLeft || {};
+
+  return (
+    <div className="flex gap-8 text-center">
+      <div className="p-5 px-10 shadow-s1">
+        <Title level={4}>{days}</Title>
+        <Caption>Days</Caption>
+      </div>
+      <div className="p-5 px-10 shadow-s1">
+        <Title level={4}>{hours}</Title>
+        <Caption>Hours</Caption>
+      </div>
+      <div className="p-5 px-10 shadow-s1">
+        <Title level={4}>{minutes}</Title>
+        <Caption>Minutes</Caption>
+      </div>
+      <div className="p-5 px-10 shadow-s1">
+        <Title level={4}>{seconds}</Title>
+        <Caption>Seconds</Caption>
+      </div>
+    </div>
+  );
+};
 
 export const ProductDetails = () => {
 
@@ -102,28 +172,15 @@ export const ProductDetails = () => {
               <br />
               <Caption>Time left:</Caption>
               <br />
-              <div className="flex gap-8 text-center">
-                <div className="p-5 px-10 shadow-s1">
-                  <Title level={4}>149</Title>
-                  <Caption>Days</Caption>
-                </div>
-                <div className="p-5 px-10 shadow-s1">
-                  <Title level={4}>12</Title>
-                  <Caption>Hours</Caption>
-                </div>
-                <div className="p-5 px-10 shadow-s1">
-                  <Title level={4}>36</Title>
-                  <Caption>Minutes</Caption>
-                </div>
-                <div className="p-5 px-10 shadow-s1">
-                  <Title level={4}>51</Title>
-                  <Caption>Seconds</Caption>
-                </div>
-              </div>
+               {/* Render the CountdownTimer component here */}
+               {console.log("product.createdAt:", product?.createdAt)}
+              {product?.createdAt  && <CountdownTimer createdAt={product.createdAt} product={product}/>}
               <br />
               <Title className="flex items-center gap-2">
                 Auction ends:
-                <Caption><DateFormatter date ={product?.createdAt}/></Caption>
+                <Caption>
+    <DateFormatter date={new Date(new Date(product?.createdAt).getTime() + product?.validityPeriod * 24 * 60 * 60 * 1000)} />
+  </Caption>
               </Title>
               <Title className="flex items-center gap-2 my-5">
                 Timezone: <Caption>UTC 0</Caption>

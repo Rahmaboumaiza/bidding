@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import{Home, Layout, ProductDetails,ScrollToTop,Register,Login,LoginAsSeller,
  PrivateRoute,UserProfile,Dashboard,DashboardLayout,AddProduct,ProductEdit,ProductList,
- WinningBidList,Catgeorylist,CreateCategory,UpdateCategory,Income,AdminProductList,UpdateProductByAdmin,UserList} from "./routes/index.js"
+ WinningBidList,Catgeorylist,CreateCategory,UpdateCategory,Income,
+ AdminProductList,UpdateProductByAdmin,UserList,Favorites,Contact} from "./routes/index.js"
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"
@@ -228,6 +229,21 @@ function App() {
               </PrivateRoute>
             }
           />
+
+             <Route
+            path="/favorites"
+            element={
+              <PrivateRoute>
+                <Layout>
+                  <DashboardLayout>
+                    <Favorites />
+                  </DashboardLayout>
+                </Layout>
+              </PrivateRoute>
+            }
+          />
+
+           <Route path="/contact" element={<Contact />} />
     </Routes>
     </BrowserRouter>
     </>

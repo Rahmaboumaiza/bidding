@@ -43,6 +43,28 @@ const updateProductByAdmin = async (id,formData) => {
   return response.data;
 };
 
+const  updateVerify= async (id, formData) => {
+  const response = await axios.patch(`${PRODUCT_URL}/admin/verify/${id}`,
+     formData,
+    {
+      withCredentials: true, // ✅ This sends cookies with the request
+    }
+  );
+  return response.data;
+};
+
+
+const expireProduct = async (productId) => {
+  try {
+      console.log(`Requesting PATCH ${PRODUCT_URL}/${productId}/expire`);
+    await axios.patch(`${PRODUCT_URL}/${productId}/expire`);
+    console.log("Product marked as expired");
+  } catch (error) {
+    console.error("Failed to mark product as expired", error);
+  }
+};
+
+
 
 const productService={
     createProduct,
@@ -53,6 +75,8 @@ const productService={
     deleteProduct,
     updateProduct,
     updateProductByAdmin,
+    updateVerify,
+    expireProduct,
 };
 
 export default productService;

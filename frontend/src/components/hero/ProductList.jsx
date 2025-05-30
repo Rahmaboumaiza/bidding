@@ -2,6 +2,7 @@ import { Container, Heading } from "../../components/common/Design";
 import { ProductCard } from "../cards/ProductCard";
 
 export const ProductList = ({products}) => {
+   
   return (
     <>
       <section className="product-home">
@@ -12,7 +13,10 @@ export const ProductList = ({products}) => {
           />
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 my-8">
-            {products?.slice(0, 12)?.map((item, index) => (
+           {products
+              ?.filter(item => item.isExpired === false && item.isVerify === true && item.isSoldout ===false)
+              .slice(0, 12)
+              .map((item, index) => (
               <ProductCard item={item} key={index + 1} />
             ))}
           </div>

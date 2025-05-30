@@ -1,4 +1,4 @@
-{
+{  "proxy": "http://localhost:5000",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "js-cookie": "^3.0.5"
