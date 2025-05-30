@@ -52,8 +52,7 @@ const generateToken=(id)=>{
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  const image = req.file; // this comes from multer
-console.log(image); // check in logs if it's undefined
+
 
   if (!name || !email || !password) {
     res.status(400);
@@ -71,7 +70,6 @@ console.log(image); // check in logs if it's undefined
     email,
     password,
     password,
-    photo,
   });
 
   const token = generateToken(user._id);
@@ -85,7 +83,7 @@ console.log(image); // check in logs if it's undefined
 
   if (user) {
     const { _id, name, email, photo, role } = user;
-    res.status(201).json({ _id, name, email, photo, token, role });
+    res.status(201).json({ _id, name, email, token, role });
   } else {
     res.status(400);
     throw new Error("Invalid user data");
@@ -202,6 +200,8 @@ const getUser =asyncHandler(async (req,res)=>{
  const user =await User.findById(req.user._id).select("-password");
  res.status(200).json(user);
 }); 
+
+
 
 const getuserBalance=asyncHandler(async (req,res)=>{
  const user =await User.findById(req.user._id);

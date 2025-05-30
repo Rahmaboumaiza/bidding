@@ -51,13 +51,8 @@ export const Register = () => {
       return toast.error("password does not match");
     }
 
-   const userData = new FormData();
-userData.append("name", name);
-userData.append("email", email);
-userData.append("password", password);
-if (userImage) {
-  userData.append("photo", userImage);
-}
+  const userData = { name, email, password };
+
     dispatch (register(userData));
   };
 
@@ -126,16 +121,9 @@ if (userImage) {
             <input type="password" name="confirmPassword" value ={confirmPassword}  onChange={handleInputChange}className={commonClassNameOfInput} placeholder="Confirm password" />
           </div>
           
-                    <div>
+                    {/* <div>
                       <Caption className="mb-2">Image </Caption>
-              <input
-  type="file"
-  accept="image/*"
-  className={commonClassNameOfInput}
-  name="image"
-  onChange={handleimagechange}
-/>
-
+                      <input type="file" className={`${commonClassNameOfInput}`} name="image" onChange={(e)=>handleimagechange(e)}/>
                       {imagePreview!==null?(
                         <div>
                           <img src={imagePreview} alt ="" className="mt-5 rounded-lg w-48 h-48 object-cover" />
@@ -143,7 +131,7 @@ if (userImage) {
                       ):(
                         <p></p>
                       )}
-                    </div>
+                    </div> */}
           <div className="flex items-center gap-2 py-4">
             <input type="checkbox" />
             <Caption>I agree to the Terms & Policy</Caption>

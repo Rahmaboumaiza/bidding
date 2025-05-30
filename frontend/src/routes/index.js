@@ -1,5 +1,9 @@
+export { ProductSearchPage } from '../screen/product/ProductSearchPage';
+
+export{ AllProducts } from '../screen/product/AllProducts';
+
 // export { ProductCard } from "../components/cards/ProductCard";
-import Favorites from './../screen/product/Favorites';
+export { ProductsByCategory} from '../screen/product/ProductsByCategory';
 // export { CategoryCards } from "../components/cards/CategoryCards";
 
 export { UserProfile } from "../screen/auth/UserProfile";

@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import{Home, Layout, ProductDetails,ScrollToTop,Register,Login,LoginAsSeller,
  PrivateRoute,UserProfile,Dashboard,DashboardLayout,AddProduct,ProductEdit,ProductList,
  WinningBidList,Catgeorylist,CreateCategory,UpdateCategory,Income,
- AdminProductList,UpdateProductByAdmin,UserList,Favorites,Contact} from "./routes/index.js"
+ AdminProductList,UpdateProductByAdmin,UserList,Favorites,Contact,ProductsByCategory,AllProducts,ProductSearchPage} from "./routes/index.js"
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"
@@ -243,7 +243,11 @@ function App() {
             }
           />
 
-           <Route path="/contact" element={<Contact />} />
+           <Route path="/contact" element={<Layout><Contact /> </Layout>} />
+           <Route path="/products/:category" element={<Layout> <ProductsByCategory />  </Layout>} />
+           <Route path="/allProducts" element={<Layout> <AllProducts/>  </Layout>} />
+           <Route path="/allProducts" element={<Layout> <AllProducts/>  </Layout>} />
+          <Route path="/products" element={<Layout><ProductSearchPage /> </Layout>} />
     </Routes>
     </BrowserRouter>
     </>

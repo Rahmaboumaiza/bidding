@@ -17,7 +17,7 @@ export const Footer = () => {
 
         <Container className={`${isHomePage ? "mt-32" : "mt-0"} flex flex-col md:flex-row justify-between gap-12`}>
           <div className="w-full md:w-1/3">
-            <img src="../images/comman/header-logo.png" alt="" />
+            {/* <img src="../images/comman/header-logo.png" alt="" /> */}
             <br />
             <p className="text-gray-300">Created with the collaboration of over 60 of the worlds best Nuron Artists.</p>
             <div className="bg-gray-300 h-[1px] my-8"></div>

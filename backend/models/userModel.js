@@ -6,11 +6,11 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: [true ,"please add a name"] },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: [true ,"please provide your password"]},
-      photo: {
-      type: String,
-      require: [true, "Please add a photo"],
-      default: "https://cdn-icons-png.flaticon.com/512/2202/2202112.png",
-    },
+    //   photo: {
+    //   type: String,
+    //   require: [true, "Please add a photo"],
+    //   default: "https://cdn-icons-png.flaticon.com/512/2202/2202112.png",
+    // },
     role: { type: String, enum: ['admin', 'seller', 'buyer'], default:"buyer" }, 
     commissionBalance: { type: String, default:0 }, 
     Balance :{ type:Number, default:0 }, 

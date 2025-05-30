@@ -4,7 +4,7 @@ import { User2 } from "../../components/hero/Hero";
 import { commonClassNameOfInput, PrimaryButton } from "../../components/common/Design";
 import { useRedirectLoggedOutUser } from "../../hooks/useRedirectLoggedOutUser";
 import { useDispatch, useSelector } from "react-redux";
-import { getuserProfile } from "../../redux/features/authSlice";
+import { getuserProfile,u } from "../../redux/features/authSlice";
 import { useState } from "react";
 
 const initialState ={

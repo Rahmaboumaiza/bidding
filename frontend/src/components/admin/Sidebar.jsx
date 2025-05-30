@@ -40,6 +40,7 @@ export const Sidebar = () => {
     dispatch(RESET());
     await dispatch (logOut());
     navigate ("/");
+    window.location.reload(); // <-- Force full page reload to refresh the header
   };
   
  const className = "flex items-center gap-3 mb-2 p-4 rounded-full";
@@ -48,7 +49,7 @@ export const Sidebar = () => {
     <>
       <section className="sidebar flex flex-col justify-between h-full">
         <div className="profile flex items-center text-center justify-center gap-8 flex-col mb-8">
-          <img src={user?.photo} alt="" className="w-32 h-32 rounded-full object-cover" />
+          <img src={User1} alt="" className="w-32 h-32 rounded-full object-cover" />
           <div>
             <Title className="capitalize">{user?.name}</Title>
             <Caption>{user?.email}</Caption>

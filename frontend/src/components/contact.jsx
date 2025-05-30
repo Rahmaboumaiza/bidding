@@ -3,6 +3,7 @@ import React from "react";
 
 export const Contact = () => {
   return (
+      <section className="product-home h-screen pt-20">
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 py-10 px-4">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-2">Get in Touch</h1>
@@ -72,5 +73,6 @@ export const Contact = () => {
         </div>
       </div>
     </div>
+    </section>
   );
 };
