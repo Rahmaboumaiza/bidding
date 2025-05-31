@@ -58,7 +58,7 @@ export const UserProfile = () => {
     <>
       <section className="shadow-s1 p-8 rounded-lg">
         <div className="profile flex items-center gap-8">
-          <img src={User2} alt="" className="w-24 h-24 rounded-full object-cover" />
+          <img src={user?.image?.filePath } alt="" className="w-32 h-32 rounded-full object-cover" />
           <div>
             <Title level={5} className="capitalize">
              {user?.name}

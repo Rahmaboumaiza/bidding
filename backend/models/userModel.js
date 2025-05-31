@@ -12,7 +12,16 @@ const userSchema = new mongoose.Schema({
     favorites: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product' // Reference to your Product model
-  }]
+  }],
+   image:{
+        type:Object,
+          default: {
+    fileName: "default-user.jpg",
+    filePath: "https://cdn-icons-png.flaticon.com/128/6997/6997662.png",
+    fileType: "image/jpeg",
+    public_id: null,
+  },
+    },
 }, 
 {timestamps:true}
 );

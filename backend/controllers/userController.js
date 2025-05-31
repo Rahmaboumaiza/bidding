@@ -4,6 +4,7 @@ const router = express.Router();
 const jwt =require ("jsonwebtoken");
 const User = require("../models/userModel"); 
 const bcrypt= require('bcryptjs');
+const cloudinary=require("cloudinary");
 
 const Product = require('../models/productModel');
 
@@ -65,11 +66,34 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Email is already exit");
   }
 
+   // 👇 log file to see what you're receiving
+    console.log("📦 req.file:", req.file);
+
+  // Image upload handling (like in createProduct)
+  let fileData = {};
+  if (req.file) {
+    try {
+      const uploadedFile = await cloudinary.uploader.upload(req.file.path, {
+        folder: "Bidding/userProfile",
+        resource_type: "image",
+      });
+       fileData = {
+        fileName: req.file.originalname,
+        filePath: uploadedFile.secure_url,
+        fileType: req.file.mimetype,
+        public_id: uploadedFile.public_id,
+      };
+    } catch (error) {
+    console.error("❌ Cloudinary error:", error);
+    res.status(500);
+    throw new Error("Image could not be uploaded");
+  }
+}
   const user = await User.create({
     name,
     email,
     password,
-    password,
+    image: fileData,
   });
 
   const token = generateToken(user._id);
@@ -82,8 +106,8 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    const { _id, name, email, photo, role } = user;
-    res.status(201).json({ _id, name, email, token, role });
+    const { _id, name, email, image, role } = user;
+    res.status(201).json({ _id, name, email,image, token, role });
   } else {
     res.status(400);
     throw new Error("Invalid user data");

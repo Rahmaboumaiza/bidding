@@ -51,10 +51,17 @@ export const Register = () => {
       return toast.error("password does not match");
     }
 
-  const userData = { name, email, password };
 
-    dispatch (register(userData));
-  };
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("email", email);
+  formData.append("password", password);
+  if (userImage) {
+    formData.append("image", userImage); // ✅ attach image to form data
+  }
+
+  dispatch(register(formData));
+};
 
   useEffect(()=>{
     if (isSuccess && isLoggedIn){
@@ -121,17 +128,17 @@ export const Register = () => {
             <input type="password" name="confirmPassword" value ={confirmPassword}  onChange={handleInputChange}className={commonClassNameOfInput} placeholder="Confirm password" />
           </div>
           
-                    {/* <div>
-                      <Caption className="mb-2">Image </Caption>
-                      <input type="file" className={`${commonClassNameOfInput}`} name="image" onChange={(e)=>handleimagechange(e)}/>
-                      {imagePreview!==null?(
-                        <div>
-                          <img src={imagePreview} alt ="" className="mt-5 rounded-lg w-48 h-48 object-cover" />
-                          </div>
-                      ):(
-                        <p></p>
-                      )}
-                    </div> */}
+                     <div>
+            <Caption className="mb-2">Image </Caption>
+            <input type="file" className={`${commonClassNameOfInput}`} name="image" onChange={(e)=>handleimagechange(e)}/>
+            {imagePreview!==null?(
+              <div>
+                <img src={imagePreview} alt ="" className="mt-5 rounded-lg w-48 h-48 object-cover" />
+                </div>
+            ):(
+              <p>No image set of this product</p>
+            )}
+          </div>
           <div className="flex items-center gap-2 py-4">
             <input type="checkbox" />
             <Caption>I agree to the Terms & Policy</Caption>
